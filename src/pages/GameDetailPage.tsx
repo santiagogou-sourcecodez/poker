@@ -3,9 +3,10 @@ import { useLiveQuery } from 'dexie-react-hooks'
 import { PageHeader, PageContent } from '../components/layout/Shell'
 import { Card } from '../components/ui/Card'
 import { ResultCard } from '../components/settlement/ResultCard'
+import { TransferList } from '../components/settlement/TransferList'
 import { db } from '../db/database'
 import { formatDateLong, formatDuration } from '../lib/format'
-import { calculateTotalPot } from '../lib/settlement'
+import { calculateTotalPot, calculateMinTransfers } from '../lib/settlement'
 
 export function GameDetailPage() {
   const params = useParams<{ id: string }>()
@@ -69,6 +70,15 @@ export function GameDetailPage() {
             <ResultCard key={gp.id} gamePlayer={gp} rank={i + 1} />
           ))}
         </Card>
+
+        {(() => {
+          const settled = gamePlayers
+            .filter((gp) => gp.net !== undefined)
+            .map((gp) => ({ playerId: gp.playerId, net: gp.net! }))
+          const transfers = calculateMinTransfers(settled)
+          const playerMap = new Map(gamePlayers.map((gp) => [gp.playerId, gp.player]))
+          return <TransferList transfers={transfers} playerMap={playerMap} />
+        })()}
 
         {game.notes && (
           <div className="mt-4 p-3 bg-slate-800/50 rounded-xl">

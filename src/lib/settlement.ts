@@ -47,3 +47,55 @@ export function settlePlayer(
 export function calculateTotalPot(players: Pick<GamePlayer, 'buyIns'>[]): number {
   return players.reduce((sum, p) => sum + calculateCashIn(p.buyIns), 0)
 }
+
+export interface Transfer {
+  fromId: number
+  toId: number
+  amount: number // euros, positive
+}
+
+/**
+ * Greedy algorithm to minimize the number of transfers needed to settle all debts.
+ * Takes players with their net results and returns the minimum set of transfers.
+ */
+export function calculateMinTransfers(
+  players: { playerId: number; net: number }[]
+): Transfer[] {
+  // Build list of debtors (negative net) and creditors (positive net)
+  // Use cents internally to avoid floating-point drift
+  const debtors: { id: number; owes: number }[] = []
+  const creditors: { id: number; owed: number }[] = []
+
+  for (const p of players) {
+    const cents = Math.round(p.net * 100)
+    if (cents < 0) {
+      debtors.push({ id: p.playerId, owes: -cents })
+    } else if (cents > 0) {
+      creditors.push({ id: p.playerId, owed: cents })
+    }
+  }
+
+  // Sort both descending so largest amounts settle first
+  debtors.sort((a, b) => b.owes - a.owes)
+  creditors.sort((a, b) => b.owed - a.owed)
+
+  const transfers: Transfer[] = []
+  let di = 0
+  let ci = 0
+
+  while (di < debtors.length && ci < creditors.length) {
+    const amount = Math.min(debtors[di].owes, creditors[ci].owed)
+    transfers.push({
+      fromId: debtors[di].id,
+      toId: creditors[ci].id,
+      amount: amount / 100,
+    })
+    debtors[di].owes -= amount
+    creditors[ci].owed -= amount
+
+    if (debtors[di].owes === 0) di++
+    if (creditors[ci].owed === 0) ci++
+  }
+
+  return transfers
+}

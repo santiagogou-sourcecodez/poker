@@ -13,6 +13,12 @@ export class PokerDB extends Dexie {
       games: '++id, date, status',
       gamePlayers: '++id, gameId, playerId, [gameId+playerId]',
     })
+    // v2: add paymentMethod + paymentDetails to players (no index changes needed)
+    this.version(2).stores({
+      players: '++id, name, isActive',
+      games: '++id, date, status',
+      gamePlayers: '++id, gameId, playerId, [gameId+playerId]',
+    })
   }
 }
 

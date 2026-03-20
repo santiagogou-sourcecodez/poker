@@ -4,6 +4,8 @@ export interface Player {
   emoji?: string
   createdAt: Date
   isActive: boolean
+  paymentMethod?: string
+  paymentDetails?: string
 }
 
 export type GameStatus = 'active' | 'settling' | 'completed'

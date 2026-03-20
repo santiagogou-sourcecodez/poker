@@ -12,6 +12,8 @@ export function PlayerManagementPage() {
   const { players } = usePlayers()
   const [name, setName] = useState('')
   const [emoji, setEmoji] = useState('')
+  const [paymentMethod, setPaymentMethod] = useState('')
+  const [paymentDetails, setPaymentDetails] = useState('')
   const [editingId, setEditingId] = useState<number | null>(null)
   const [deactivateId, setDeactivateId] = useState<number | null>(null)
 
@@ -21,18 +23,27 @@ export function PlayerManagementPage() {
     if (!trimmed) return
 
     if (editingId) {
-      await db.players.update(editingId, { name: trimmed, emoji: emoji || undefined })
+      await db.players.update(editingId, {
+        name: trimmed,
+        emoji: emoji || undefined,
+        paymentMethod: paymentMethod.trim() || undefined,
+        paymentDetails: paymentDetails.trim() || undefined,
+      })
       setEditingId(null)
     } else {
       await db.players.add({
         name: trimmed,
         emoji: emoji || undefined,
+        paymentMethod: paymentMethod.trim() || undefined,
+        paymentDetails: paymentDetails.trim() || undefined,
         createdAt: new Date(),
         isActive: true,
       })
     }
     setName('')
     setEmoji('')
+    setPaymentMethod('')
+    setPaymentDetails('')
   }
 
   const startEdit = (id: number) => {
@@ -41,6 +52,8 @@ export function PlayerManagementPage() {
       setEditingId(id)
       setName(player.name)
       setEmoji(player.emoji ?? '')
+      setPaymentMethod(player.paymentMethod ?? '')
+      setPaymentDetails(player.paymentDetails ?? '')
     }
   }
 
@@ -48,6 +61,8 @@ export function PlayerManagementPage() {
     setEditingId(null)
     setName('')
     setEmoji('')
+    setPaymentMethod('')
+    setPaymentDetails('')
   }
 
   const toggleActive = async () => {
@@ -66,29 +81,55 @@ export function PlayerManagementPage() {
     <>
       <PageHeader title="Players" />
       <PageContent>
-        <form onSubmit={handleSubmit} className="flex gap-2 mb-6">
-          <input
-            type="text"
-            value={emoji}
-            onChange={(e) => setEmoji(e.target.value)}
-            placeholder="😎"
-            className="w-12 bg-slate-800 border border-slate-700 rounded-xl px-2 py-2.5 text-center text-lg focus:outline-none focus:border-emerald-500"
-          />
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Player name"
-            className="flex-1 bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-slate-200 focus:outline-none focus:border-emerald-500"
-          />
-          <Button type="submit" disabled={!name.trim()}>
-            {editingId ? 'Save' : 'Add'}
-          </Button>
-          {editingId && (
-            <Button type="button" variant="ghost" onClick={cancelEdit}>
-              ✕
+        <form onSubmit={handleSubmit} className="mb-6 space-y-2">
+          <div className="flex gap-2">
+            <input
+              type="text"
+              value={emoji}
+              onChange={(e) => setEmoji(e.target.value)}
+              placeholder="😎"
+              className="w-12 bg-slate-800 border border-slate-700 rounded-xl px-2 py-2.5 text-center text-lg focus:outline-none focus:border-emerald-500"
+            />
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Player name"
+              className="flex-1 bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-slate-200 focus:outline-none focus:border-emerald-500"
+            />
+          </div>
+          <div className="flex gap-2">
+            <select
+              value={paymentMethod}
+              onChange={(e) => setPaymentMethod(e.target.value)}
+              className="bg-slate-800 border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-slate-200 focus:outline-none focus:border-emerald-500"
+            >
+              <option value="">Payment method</option>
+              <option value="Bizum">Bizum</option>
+              <option value="Revolut">Revolut</option>
+              <option value="PayPal">PayPal</option>
+              <option value="Bank transfer">Bank transfer</option>
+              <option value="Cash">Cash</option>
+              <option value="Other">Other</option>
+            </select>
+            <input
+              type="text"
+              value={paymentDetails}
+              onChange={(e) => setPaymentDetails(e.target.value)}
+              placeholder="Phone, @username, etc."
+              className="flex-1 bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-200 focus:outline-none focus:border-emerald-500"
+            />
+          </div>
+          <div className="flex gap-2">
+            <Button type="submit" fullWidth disabled={!name.trim()}>
+              {editingId ? 'Save' : 'Add Player'}
             </Button>
-          )}
+            {editingId && (
+              <Button type="button" variant="ghost" onClick={cancelEdit}>
+                Cancel
+              </Button>
+            )}
+          </div>
         </form>
 
         {players.length === 0 ? (
@@ -107,7 +148,14 @@ export function PlayerManagementPage() {
                     className="flex items-center gap-3 py-3 border-b border-slate-800 last:border-0"
                   >
                     <PlayerAvatar name={player.name} emoji={player.emoji} />
-                    <span className="flex-1 font-medium text-slate-200">{player.name}</span>
+                    <div className="flex-1 min-w-0">
+                      <div className="font-medium text-slate-200">{player.name}</div>
+                      {player.paymentMethod && (
+                        <div className="text-xs text-slate-500">
+                          {player.paymentMethod}{player.paymentDetails ? ` · ${player.paymentDetails}` : ''}
+                        </div>
+                      )}
+                    </div>
                     <Button variant="ghost" size="sm" onClick={() => startEdit(player.id!)}>
                       Edit
                     </Button>

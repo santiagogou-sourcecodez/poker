@@ -4,6 +4,7 @@ import { Card } from '../components/ui/Card'
 import { Button } from '../components/ui/Button'
 import { ChipEntryRow } from '../components/settlement/ChipEntryRow'
 import { BalanceIndicator } from '../components/settlement/BalanceIndicator'
+import { TransferList } from '../components/settlement/TransferList'
 import { useActiveGame } from '../hooks/useActiveGame'
 import { db } from '../db/database'
 import {
@@ -12,6 +13,7 @@ import {
   calculateChipDifference,
   settlePlayer,
   calculateTotalPot,
+  calculateMinTransfers,
 } from '../lib/settlement'
 
 export function SettlementPage() {
@@ -90,6 +92,18 @@ export function SettlementPage() {
             />
           ))}
         </Card>
+
+        {balanced && (() => {
+          const settled = activeGame.gamePlayers.map((gp) => ({
+            playerId: gp.playerId,
+            net: settlePlayer(gp).net,
+          }))
+          const transfers = calculateMinTransfers(settled)
+          const playerMap = new Map(
+            activeGame.gamePlayers.map((gp) => [gp.playerId, gp.player])
+          )
+          return <TransferList transfers={transfers} playerMap={playerMap} />
+        })()}
 
         <div className="mt-6">
           <Button fullWidth size="lg" disabled={!balanced} onClick={handleSave}>
