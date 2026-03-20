@@ -15,11 +15,17 @@ export function DashboardPage() {
   const activeGame = useActiveGame()
   const history = useGameHistory()
   const leaderboard = useLeaderboard()
-  const { isOnline, isScorekeeper, enterScorekeeper, exitScorekeeper } = useSyncContext()
+  const { isOnline, isScorekeeper, enterScorekeeper, exitScorekeeper, changePin } = useSyncContext()
 
   const [showPinModal, setShowPinModal] = useState(false)
+  const [showChangePinModal, setShowChangePinModal] = useState(false)
+  const [showScorekeeperMenu, setShowScorekeeperMenu] = useState(false)
   const [pin, setPin] = useState('')
   const [pinError, setPinError] = useState(false)
+  const [currentPin, setCurrentPin] = useState('')
+  const [newPin, setNewPin] = useState('')
+  const [changePinError, setChangePinError] = useState(false)
+  const [changePinSuccess, setChangePinSuccess] = useState(false)
 
   const hasActiveGame = activeGame !== null && activeGame !== undefined
 
@@ -35,6 +41,23 @@ export function DashboardPage() {
     }
   }
 
+  const handleChangePinSubmit = async () => {
+    if (currentPin.length !== 4 || newPin.length !== 4) return
+    const ok = await changePin(currentPin, newPin)
+    if (ok) {
+      setChangePinSuccess(true)
+      setTimeout(() => {
+        setShowChangePinModal(false)
+        setCurrentPin('')
+        setNewPin('')
+        setChangePinError(false)
+        setChangePinSuccess(false)
+      }, 1200)
+    } else {
+      setChangePinError(true)
+    }
+  }
+
   return (
     <>
       <PageHeader
@@ -43,12 +66,30 @@ export function DashboardPage() {
           <div className="flex items-center gap-2">
             {isOnline && (
               isScorekeeper ? (
-                <button
-                  onClick={exitScorekeeper}
-                  className="text-xs bg-emerald-500/20 text-emerald-400 px-2 py-1 rounded-lg hover:bg-emerald-500/30 transition-colors"
-                >
-                  scorekeeper ✓
-                </button>
+                <div className="relative">
+                  <button
+                    onClick={() => setShowScorekeeperMenu(!showScorekeeperMenu)}
+                    className="text-xs bg-emerald-500/20 text-emerald-400 px-2 py-1 rounded-lg hover:bg-emerald-500/30 transition-colors"
+                  >
+                    scorekeeper ✓
+                  </button>
+                  {showScorekeeperMenu && (
+                    <div className="absolute right-0 top-8 z-50 bg-slate-900 border border-slate-700 rounded-xl py-1 w-36 shadow-lg">
+                      <button
+                        onClick={() => { setShowScorekeeperMenu(false); setShowChangePinModal(true) }}
+                        className="w-full text-left px-3 py-2 text-sm text-slate-300 hover:bg-slate-800"
+                      >
+                        change pin
+                      </button>
+                      <button
+                        onClick={() => { setShowScorekeeperMenu(false); exitScorekeeper() }}
+                        className="w-full text-left px-3 py-2 text-sm text-red-400 hover:bg-slate-800"
+                      >
+                        exit scorekeeper
+                      </button>
+                    </div>
+                  )}
+                </div>
               ) : (
                 <button
                   onClick={() => setShowPinModal(true)}
@@ -225,6 +266,62 @@ export function DashboardPage() {
                 enter
               </Button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Change PIN modal */}
+      {showChangePinModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+          <div className="bg-slate-900 border border-slate-700 rounded-2xl p-6 w-72">
+            <h2 className="text-lg font-bold text-slate-200 mb-1">change pin</h2>
+            {changePinSuccess ? (
+              <p className="text-sm text-emerald-400 py-4 text-center">pin changed</p>
+            ) : (
+              <>
+                <p className="text-sm text-slate-400 mb-4">enter current pin, then your new one.</p>
+                <div className="space-y-3">
+                  <div>
+                    <label className="text-xs text-slate-500 mb-1 block">current pin</label>
+                    <input
+                      type="tel"
+                      maxLength={4}
+                      value={currentPin}
+                      onChange={(e) => {
+                        setCurrentPin(e.target.value.replace(/\D/g, '').slice(0, 4))
+                        setChangePinError(false)
+                      }}
+                      placeholder="0000"
+                      autoFocus
+                      className={`w-full text-center text-2xl tracking-[0.5em] bg-slate-800 border ${changePinError ? 'border-red-500' : 'border-slate-700'} rounded-xl px-4 py-3 text-slate-200 focus:outline-none focus:border-emerald-500`}
+                    />
+                    {changePinError && (
+                      <p className="text-xs text-red-400 mt-1">wrong current pin</p>
+                    )}
+                  </div>
+                  <div>
+                    <label className="text-xs text-slate-500 mb-1 block">new pin</label>
+                    <input
+                      type="tel"
+                      maxLength={4}
+                      value={newPin}
+                      onChange={(e) => setNewPin(e.target.value.replace(/\D/g, '').slice(0, 4))}
+                      onKeyDown={(e) => e.key === 'Enter' && handleChangePinSubmit()}
+                      placeholder="0000"
+                      className="w-full text-center text-2xl tracking-[0.5em] bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-slate-200 focus:outline-none focus:border-emerald-500"
+                    />
+                  </div>
+                </div>
+                <div className="flex gap-2 mt-4">
+                  <Button variant="ghost" fullWidth onClick={() => { setShowChangePinModal(false); setCurrentPin(''); setNewPin(''); setChangePinError(false) }}>
+                    cancel
+                  </Button>
+                  <Button fullWidth disabled={currentPin.length !== 4 || newPin.length !== 4} onClick={handleChangePinSubmit}>
+                    save
+                  </Button>
+                </div>
+              </>
+            )}
           </div>
         </div>
       )}

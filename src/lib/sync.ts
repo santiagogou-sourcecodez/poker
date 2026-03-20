@@ -218,6 +218,13 @@ export async function verifyPin(pin: string): Promise<boolean> {
   return stored === pin
 }
 
+export async function changePin(currentPin: string, newPin: string): Promise<boolean> {
+  const valid = await verifyPin(currentPin)
+  if (!valid) return false
+  await setPin(newPin)
+  return true
+}
+
 // --- Push all local data to Firestore (initial scorekeeper sync) ---
 
 export async function pushAllToFirestore(): Promise<void> {

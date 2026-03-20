@@ -5,6 +5,7 @@ import {
   startFirestoreSync,
   setScorekeeper,
   verifyPin,
+  changePin as changePinSync,
   pushAllToFirestore,
 } from '../lib/sync'
 
@@ -13,6 +14,7 @@ interface SyncContextValue {
   isScorekeeper: boolean
   enterScorekeeper: (pin: string) => Promise<boolean>
   exitScorekeeper: () => void
+  changePin: (currentPin: string, newPin: string) => Promise<boolean>
 }
 
 const SyncContext = createContext<SyncContextValue>({
@@ -20,6 +22,7 @@ const SyncContext = createContext<SyncContextValue>({
   isScorekeeper: false,
   enterScorekeeper: async () => false,
   exitScorekeeper: () => {},
+  changePin: async () => false,
 })
 
 export function useSyncContext() {
@@ -71,6 +74,10 @@ export function SyncProvider({ children }: { children: ReactNode }) {
     setScorekeeper(false)
   }, [])
 
+  const changePin = useCallback(async (currentPin: string, newPin: string) => {
+    return changePinSync(currentPin, newPin)
+  }, [])
+
   return (
     <SyncContext.Provider
       value={{
@@ -78,6 +85,7 @@ export function SyncProvider({ children }: { children: ReactNode }) {
         isScorekeeper: isScorekeep,
         enterScorekeeper,
         exitScorekeeper,
+        changePin,
       }}
     >
       {children}
