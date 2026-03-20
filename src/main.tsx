@@ -4,12 +4,11 @@ import './index.css'
 import App from './App'
 import { seedDatabase } from './db/seed'
 
-// Seed real league data if local DB is empty.
-// When scorekeeper first connects, pushAllToFirestore() syncs it to Firestore.
-seedDatabase()
-
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
-)
+// Await seed before rendering — sync depends on local data existing
+seedDatabase().then(() => {
+  createRoot(document.getElementById('root')!).render(
+    <StrictMode>
+      <App />
+    </StrictMode>,
+  )
+})

@@ -2,7 +2,7 @@ import { db } from './database'
 import type { Player } from './models'
 import { settlePlayer } from '../lib/settlement'
 
-const SEED_VERSION = '6'
+const SEED_VERSION = '7'
 
 export async function seedDatabase() {
   const currentVersion = localStorage.getItem('seedVersion')
