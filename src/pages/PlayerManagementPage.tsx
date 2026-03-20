@@ -20,9 +20,40 @@ export function PlayerManagementPage() {
   const emojiPickerRef = useRef<HTMLDivElement>(null)
 
   const EMOJI_OPTIONS = [
-    '🎯', '🔥', '🍀', '💎', '🐺', '🌙', '🃏', '👑',
-    '🦊', '🐻', '🦁', '🐯', '🦅', '🐉', '🎲', '🎰',
-    '⚡', '💰', '🏆', '🌟', '🍺', '🎭', '🧊', '🔮',
+    // poker & games
+    '🃏', '♠️', '♥️', '♦️', '♣️', '🎲', '🎰', '🎯',
+    '🎱', '🎳', '🎮', '🕹️', '🏆', '🥇', '🥈', '🥉',
+    // money & luck
+    '💰', '💵', '💸', '💎', '🍀', '🔮', '🧿', '✨',
+    '⭐', '🌟', '💫', '⚡', '🔥', '❤️‍🔥', '🌈', '🎪',
+    // animals
+    '🐺', '🦊', '🐻', '🦁', '🐯', '🐸', '🦅', '🐉',
+    '🦈', '🐍', '🦂', '🐝', '🦋', '🐙', '🦎', '🐧',
+    '🐨', '🐼', '🦄', '🐬', '🦩', '🦜', '🐊', '🐢',
+    '🐎', '🐾', '🦉', '🦇', '🐈', '🐕', '🐖', '🐘',
+    // faces & people
+    '😎', '🤠', '🥷', '🧙', '🧛', '🤖', '👻', '💀',
+    '🎃', '👽', '🤡', '🦸', '🦹', '🧜', '🧞', '🧚',
+    '😈', '👹', '👺', '🤑', '🤓', '🧐', '🥸', '😏',
+    // food & drink
+    '🍺', '🍻', '🥃', '🍷', '🍸', '🍹', '☕', '🧉',
+    '🍕', '🌮', '🍔', '🌶️', '🍣', '🍩', '🧁', '🍿',
+    // nature & weather
+    '🌙', '🌞', '🌊', '🏔️', '🌋', '🌵', '🍄', '🌸',
+    '🌺', '🌻', '🍁', '❄️', '☀️', '⛈️', '🌪️', '💧',
+    // objects & symbols
+    '🎭', '🎨', '🎸', '🎺', '🎻', '🥁', '🎤', '🎬',
+    '📸', '🔑', '🗝️', '🧲', '💣', '🧨', '🪓', '⚔️',
+    '🛡️', '🏹', '🔱', '👑', '💍', '📿', '🧊', '🪩',
+    // sports & activities
+    '⚽', '🏀', '🏈', '🎾', '🏐', '🎳', '🏄', '🏂',
+    '🚴', '🏋️', '🤺', '🥊', '🧗', '🏇', '🎣', '🤿',
+    // travel & places
+    '🚀', '🛸', '🏰', '🗽', '🎡', '🎢', '🏝️', '⛩️',
+    // flags & misc
+    '🏴‍☠️', '🚩', '🏁', '🎌', '⚓', '🧭', '🪐', '🌍',
+    // hands & gestures
+    '🤙', '✌️', '🤘', '👊', '🫡', '🫶', '💪', '🙌',
   ]
 
   useEffect(() => {
@@ -110,7 +141,7 @@ export function PlayerManagementPage() {
                 {emoji || '😎'}
               </button>
               {showEmojiPicker && (
-                <div className="absolute top-12 left-0 z-50 bg-slate-900 border border-slate-700 rounded-xl p-2 grid grid-cols-6 gap-1 w-56 shadow-lg">
+                <div className="absolute top-12 left-0 z-50 bg-slate-900 border border-slate-700 rounded-xl p-2 grid grid-cols-8 gap-1 w-72 max-h-64 overflow-y-auto shadow-lg">
                   {EMOJI_OPTIONS.map((e) => (
                     <button
                       key={e}
@@ -131,7 +162,7 @@ export function PlayerManagementPage() {
                         setEmoji('')
                         setShowEmojiPicker(false)
                       }}
-                      className="col-span-6 mt-1 text-xs text-slate-500 hover:text-slate-300 py-1"
+                      className="col-span-8 mt-1 text-xs text-slate-500 hover:text-slate-300 py-1"
                     >
                       clear
                     </button>
