@@ -136,25 +136,15 @@ export async function seedDatabase() {
   ])
   // Chips: 3055+705+500+0+500+0+240 = 5000 ✓
 
-  // Player totals (net across all games):
-  // Mo:       24+(-20)+6+36.2+102.2   = +148.40 (5 GP, 25 pts)
-  // Richie:   15+20+14.6              = +49.60  (3 GP, 10 pts)
-  // Jeff:     10+12.6+20              = +42.60  (3 GP, 9 pts)
-  // Mikey:    20+(-37.6)+(-20.6)+50.2 = +12.00  (4 GP, 7 pts)
-  // Joe B:    (-15)+(-10)+(-20)       = -45.00  (3 GP, -2 pts)
-  // Ben:      37.4                    = +37.40  (1 GP, 6 pts)
-  // Damian:   20+28.2                 = +48.20  (2 GP)
-  // Nick:     17.6                    = +17.60  (1 GP, 4 pts)
-  // Joseph:   13.8                    = +13.80  (1 GP, 3 pts)
-  // Dimitri:  (-10)+8.2              = -1.80   (2 GP, 2 pts)
-  // Tom:      -1.0                    = -1.00   (1 GP, 1 pts)
-  // Santi:    -17.2                   = -17.20  (1 GP, -1 pts)
-  // Harrison: -20.0                   = -20.00  (1 GP, -1 pts)
-  // Jack:     -20.0                   = -20.00  (1 GP, -1 pts)
-  // Mick:     -20.0                   = -20.00  (1 GP, -1 pts)
-  // Juan Pedro: (-20)+(-20)           = -40.00  (2 GP, -2 pts)
-  // Ross:     -30.4                   = -30.40  (1 GP)
-  // Paulius:  (-34)+(-40)             = -74.00  (2 GP, -7 pts)
-  // Mike:     (-40)+(-60.2)           = -100.20 (2 GP, -10 pts)
-  // Note: Mike adjusted from -104.0 to -100.2 to balance games (points unchanged)
+  // Week 6 (March 19, 2026): 7 players — Mikey, Santi, Joe B, Damian, Jeff, Mo, Harrison
+  // Buy-ins: 11 total = 5500 chips (actual end chips: 5510, 10-chip counting variance)
+  await createGame('2026-03-19', 20, 4, [
+    { playerIndex: P.Mikey, buyIns: 3, finalChips: 1570 },    // +2.80
+    { playerIndex: P.Santi, buyIns: 2, finalChips: 570 },     // -17.20
+    { playerIndex: P.JoeB, buyIns: 2, finalChips: 0 },        // -40.00
+    { playerIndex: P.Damian, buyIns: 1, finalChips: 1180 },   // +27.20
+    { playerIndex: P.Jeff, buyIns: 1, finalChips: 475 },      // -1.00
+    { playerIndex: P.Mo, buyIns: 1, finalChips: 1715 },       // +48.60
+    { playerIndex: P.Harrison, buyIns: 1, finalChips: 0 },    // -20.00
+  ])
 }
