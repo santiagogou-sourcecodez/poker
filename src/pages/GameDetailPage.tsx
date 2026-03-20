@@ -43,13 +43,13 @@ export function GameDetailPage() {
   return (
     <>
       <PageHeader
-        title="Game Details"
+        title="game details"
         right={
           <button
             onClick={() => setLocation('/history')}
             className="text-sm text-slate-400 hover:text-slate-200"
           >
-            ← Back
+            ← back
           </button>
         }
       />
@@ -82,7 +82,7 @@ export function GameDetailPage() {
 
         {game.notes && (
           <div className="mt-4 p-3 bg-slate-800/50 rounded-xl">
-            <div className="text-xs text-slate-500 mb-1">Notes</div>
+            <div className="text-xs text-slate-500 mb-1">notes</div>
             <div className="text-sm text-slate-300">{game.notes}</div>
           </div>
         )}

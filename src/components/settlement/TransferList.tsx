@@ -13,8 +13,8 @@ export function TransferList({ transfers, playerMap }: TransferListProps) {
 
   return (
     <div className="mt-6">
-      <h3 className="text-sm text-slate-500 uppercase tracking-wider mb-2">
-        Transfers ({transfers.length})
+      <h3 className="text-sm text-slate-500 tracking-wider mb-2">
+        transfers ({transfers.length})
       </h3>
       <Card>
         {transfers.map((t, i) => {

@@ -97,15 +97,15 @@ export function ActiveGamePage() {
   if (activeGame === null) {
     return (
       <>
-        <PageHeader title="Game Night" />
+        <PageHeader title="game night" />
         <PageContent className="flex items-center justify-center">
           <EmptyState
             icon="🃏"
-            title="No game running"
-            description="Start a new game night and add your players."
+            title="no game running"
+            description="start a new game night and add your players."
             action={
               <Button size="lg" onClick={startGame}>
-                Start Game Night
+                start game night
               </Button>
             }
           />
@@ -125,7 +125,7 @@ export function ActiveGamePage() {
   return (
     <>
       <PageHeader
-        title="Game Night"
+        title="game night"
         right={<GameTimer startedAt={activeGame.game.startedAt} />}
       />
       <PageContent>
@@ -135,11 +135,11 @@ export function ActiveGamePage() {
           {activeGame.gamePlayers.length === 0 ? (
             <EmptyState
               icon="👥"
-              title="No players yet"
-              description="Add players to start tracking buy-ins."
+              title="no players yet"
+              description="add players to start tracking buy-ins."
               action={
                 <Button onClick={() => setShowAddPlayers(true)}>
-                  Add Players
+                  add players
                 </Button>
               }
             />
@@ -163,7 +163,7 @@ export function ActiveGamePage() {
             fullWidth
             onClick={() => setShowAddPlayers(true)}
           >
-            Add Players
+            add players
           </Button>
           {activeGame.gamePlayers.length >= 2 && (
             <Button
@@ -171,7 +171,7 @@ export function ActiveGamePage() {
               fullWidth
               onClick={() => setShowEndConfirm(true)}
             >
-              End Game & Settle
+              end game & settle
             </Button>
           )}
         </div>
@@ -179,12 +179,12 @@ export function ActiveGamePage() {
         {/* Undo toast */}
         {undoId && (
           <div className="fixed bottom-20 left-1/2 -translate-x-1/2 z-50 bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 flex items-center gap-3 shadow-lg">
-            <span className="text-sm text-slate-300">Rebuy added</span>
+            <span className="text-sm text-slate-300">rebuy added</span>
             <button
               onClick={undoRebuy}
               className="text-sm font-semibold text-amber-400 hover:text-amber-300"
             >
-              Undo
+              undo
             </button>
           </div>
         )}
@@ -200,9 +200,9 @@ export function ActiveGamePage() {
 
       <ConfirmDialog
         open={showEndConfirm}
-        title="End Game?"
-        message="This will move to settlement. You'll enter final chip counts to calculate results."
-        confirmLabel="End & Settle"
+        title="end game?"
+        message="this will move to settlement. you'll enter final chip counts to calculate results."
+        confirmLabel="end & settle"
         variant="primary"
         onConfirm={endGame}
         onCancel={() => setShowEndConfirm(false)}

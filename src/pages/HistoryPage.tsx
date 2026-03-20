@@ -13,13 +13,13 @@ export function HistoryPage() {
 
   return (
     <>
-      <PageHeader title="History" />
+      <PageHeader title="history" />
       <PageContent>
         {games.length === 0 ? (
           <EmptyState
             icon="📋"
-            title="No games yet"
-            description="Completed games will show up here."
+            title="no games yet"
+            description="completed games will show up here."
           />
         ) : (
           <div className="space-y-3">

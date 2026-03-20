@@ -8,11 +8,11 @@ export async function seedDatabase() {
 
   // Players
   const players: Omit<Player, 'id'>[] = [
-    { name: 'Marco', emoji: '🎯', createdAt: new Date('2025-09-01'), isActive: true, paymentMethod: 'Bizum', paymentDetails: '+34 612 345 678' },
-    { name: 'Sofia', emoji: '🔥', createdAt: new Date('2025-09-01'), isActive: true, paymentMethod: 'Revolut', paymentDetails: '@sofia_r' },
-    { name: 'Luca', emoji: '🍀', createdAt: new Date('2025-09-01'), isActive: true, paymentMethod: 'Bizum', paymentDetails: '+34 698 765 432' },
-    { name: 'Elena', emoji: '💎', createdAt: new Date('2025-09-01'), isActive: true, paymentMethod: 'PayPal', paymentDetails: 'elena@mail.com' },
-    { name: 'Alex', emoji: '🐺', createdAt: new Date('2025-09-15'), isActive: true, paymentMethod: 'Revolut', paymentDetails: '@alex_w' },
+    { name: 'Marco', emoji: '🎯', createdAt: new Date('2025-09-01'), isActive: true, paymentMethod: 'bizum', paymentDetails: '+34 612 345 678' },
+    { name: 'Sofia', emoji: '🔥', createdAt: new Date('2025-09-01'), isActive: true, paymentMethod: 'revolut', paymentDetails: '@sofia_r' },
+    { name: 'Luca', emoji: '🍀', createdAt: new Date('2025-09-01'), isActive: true, paymentMethod: 'bizum', paymentDetails: '+34 698 765 432' },
+    { name: 'Elena', emoji: '💎', createdAt: new Date('2025-09-01'), isActive: true, paymentMethod: 'paypal', paymentDetails: 'elena@mail.com' },
+    { name: 'Alex', emoji: '🐺', createdAt: new Date('2025-09-15'), isActive: true, paymentMethod: 'revolut', paymentDetails: '@alex_w' },
     { name: 'Nina', emoji: '🌙', createdAt: new Date('2025-10-01'), isActive: true },
   ]
 

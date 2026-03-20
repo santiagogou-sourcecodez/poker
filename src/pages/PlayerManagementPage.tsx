@@ -79,7 +79,7 @@ export function PlayerManagementPage() {
 
   return (
     <>
-      <PageHeader title="Players" />
+      <PageHeader title="players" />
       <PageContent>
         <form onSubmit={handleSubmit} className="mb-6 space-y-2">
           <div className="flex gap-2">
@@ -94,7 +94,7 @@ export function PlayerManagementPage() {
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="Player name"
+              placeholder="player name"
               className="flex-1 bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-slate-200 focus:outline-none focus:border-emerald-500"
             />
           </div>
@@ -104,29 +104,29 @@ export function PlayerManagementPage() {
               onChange={(e) => setPaymentMethod(e.target.value)}
               className="bg-slate-800 border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-slate-200 focus:outline-none focus:border-emerald-500"
             >
-              <option value="">Payment method</option>
-              <option value="Bizum">Bizum</option>
-              <option value="Revolut">Revolut</option>
-              <option value="PayPal">PayPal</option>
-              <option value="Bank transfer">Bank transfer</option>
-              <option value="Cash">Cash</option>
-              <option value="Other">Other</option>
+              <option value="">payment method</option>
+              <option value="bizum">bizum</option>
+              <option value="revolut">revolut</option>
+              <option value="paypal">paypal</option>
+              <option value="bank transfer">bank transfer</option>
+              <option value="cash">cash</option>
+              <option value="other">other</option>
             </select>
             <input
               type="text"
               value={paymentDetails}
               onChange={(e) => setPaymentDetails(e.target.value)}
-              placeholder="Phone, @username, etc."
+              placeholder="phone, @username, etc."
               className="flex-1 bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-200 focus:outline-none focus:border-emerald-500"
             />
           </div>
           <div className="flex gap-2">
             <Button type="submit" fullWidth disabled={!name.trim()}>
-              {editingId ? 'Save' : 'Add Player'}
+              {editingId ? 'save' : 'add player'}
             </Button>
             {editingId && (
               <Button type="button" variant="ghost" onClick={cancelEdit}>
-                Cancel
+                cancel
               </Button>
             )}
           </div>
@@ -135,8 +135,8 @@ export function PlayerManagementPage() {
         {players.length === 0 ? (
           <EmptyState
             icon="👥"
-            title="No players yet"
-            description="Add your poker crew above to get started."
+            title="no players yet"
+            description="add your poker crew above to get started."
           />
         ) : (
           <>
@@ -157,10 +157,10 @@ export function PlayerManagementPage() {
                       )}
                     </div>
                     <Button variant="ghost" size="sm" onClick={() => startEdit(player.id!)}>
-                      Edit
+                      edit
                     </Button>
                     <Button variant="ghost" size="sm" onClick={() => setDeactivateId(player.id!)}>
-                      Deactivate
+                      deactivate
                     </Button>
                   </div>
                 ))}
@@ -169,8 +169,8 @@ export function PlayerManagementPage() {
 
             {inactive.length > 0 && (
               <>
-                <h3 className="text-sm text-slate-500 uppercase tracking-wider mb-2 mt-6">
-                  Inactive
+                <h3 className="text-sm text-slate-500 tracking-wider mb-2 mt-6">
+                  inactive
                 </h3>
                 <Card>
                   {inactive.map((player) => (
@@ -187,7 +187,7 @@ export function PlayerManagementPage() {
                           db.players.update(player.id!, { isActive: true })
                         }}
                       >
-                        Reactivate
+                        reactivate
                       </Button>
                     </div>
                   ))}
@@ -200,9 +200,9 @@ export function PlayerManagementPage() {
 
       <ConfirmDialog
         open={deactivateId !== null}
-        title="Deactivate Player"
-        message="They won't show up when starting new games. Their history is preserved."
-        confirmLabel="Deactivate"
+        title="deactivate player?"
+        message="they won't show up when starting new games. their history is preserved."
+        confirmLabel="deactivate"
         onConfirm={toggleActive}
         onCancel={() => setDeactivateId(null)}
       />

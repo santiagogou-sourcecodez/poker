@@ -68,17 +68,17 @@ export function SettlementPage() {
   return (
     <>
       <PageHeader
-        title="Settlement"
+        title="settlement"
         right={
           <button onClick={handleBack} className="text-sm text-slate-400 hover:text-slate-200">
-            ← Back
+            ← back
           </button>
         }
       />
       <PageContent>
         <div className="flex items-center justify-between mb-4 text-sm text-slate-400">
           <span>{activeGame.gamePlayers.length} players</span>
-          <span>Total pot: €{totalPot}</span>
+          <span>total pot: €{totalPot}</span>
         </div>
 
         <BalanceIndicator difference={difference} allEntered={allEntered} />
@@ -107,7 +107,7 @@ export function SettlementPage() {
 
         <div className="mt-6">
           <Button fullWidth size="lg" disabled={!balanced} onClick={handleSave}>
-            {balanced ? 'Save Results' : 'Balance chips to save'}
+            {balanced ? 'save results' : 'balance chips to save'}
           </Button>
         </div>
       </PageContent>

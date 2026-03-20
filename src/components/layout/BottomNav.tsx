@@ -1,10 +1,10 @@
 import { useLocation, useRoute } from 'wouter'
 
 const tabs = [
-  { path: '/', label: 'Home', icon: HomeIcon },
-  { path: '/game', label: 'Game', icon: GameIcon },
-  { path: '/leaderboard', label: 'Board', icon: TrophyIcon },
-  { path: '/history', label: 'History', icon: ClockIcon },
+  { path: '/', label: 'home', icon: HomeIcon },
+  { path: '/game', label: 'game', icon: GameIcon },
+  { path: '/leaderboard', label: 'board', icon: TrophyIcon },
+  { path: '/history', label: 'history', icon: ClockIcon },
 ]
 
 export function BottomNav() {

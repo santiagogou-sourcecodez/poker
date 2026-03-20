@@ -11,18 +11,18 @@ export function FormulaExplainer() {
         className="text-xs text-slate-500 hover:text-slate-400 transition-colors flex items-center gap-1"
       >
         <span>{open ? '▾' : '▸'}</span>
-        How are points calculated?
+        how are points calculated?
       </button>
       {open && (
         <div className="mt-2 p-3 bg-slate-800/50 rounded-xl text-xs text-slate-400 space-y-2">
           <p className="font-mono text-slate-300">
-            Points = round(totalNet / {NET_DIVISOR} + {GAMES_MULTIPLIER} × gamesPlayed)
+            points = round(totalNet / {NET_DIVISOR} + {GAMES_MULTIPLIER} × gamesPlayed)
           </p>
           <p>
-            Rewards both profit and consistency. Playing more games earns base points even if you break even.
+            rewards both profit and consistency. playing more games earns base points even if you break even.
           </p>
           <p>
-            Minimum {MIN_GAMES_FOR_RANKING} games to appear in the ranked section.
+            minimum {MIN_GAMES_FOR_RANKING} games to appear in the ranked section.
           </p>
         </div>
       )}

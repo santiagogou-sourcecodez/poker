@@ -30,7 +30,7 @@ export function PlayerRow({ gamePlayer, onRebuy, onRemove }: PlayerRowProps) {
           </Button>
         )}
         <Button variant="secondary" size="sm" onClick={() => onRebuy(gamePlayer.id!)}>
-          Rebuy
+          rebuy
         </Button>
       </div>
     </div>

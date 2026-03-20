@@ -11,9 +11,9 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.svg', 'apple-touch-icon.png'],
       manifest: {
-        name: 'Poker Night',
-        short_name: 'Poker',
-        description: 'Track buy-ins, settle results, and maintain a season leaderboard',
+        name: 'poker night',
+        short_name: 'poker',
+        description: 'track buy-ins, settle results, and maintain a season leaderboard',
         theme_color: '#0f172a',
         background_color: '#0f172a',
         display: 'standalone',

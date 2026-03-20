@@ -44,7 +44,7 @@ export function AddPlayerSheet({
       <div className="absolute inset-0 bg-black/60" onClick={onClose} />
       <div className="relative bg-slate-900 border-t border-slate-800 rounded-t-2xl p-4 w-full max-w-lg max-h-[70vh] overflow-y-auto">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-semibold text-slate-200">Add Players</h3>
+          <h3 className="text-lg font-semibold text-slate-200">add players</h3>
           <button onClick={onClose} className="text-slate-500 hover:text-slate-300 text-xl">
             ✕
           </button>
@@ -52,7 +52,7 @@ export function AddPlayerSheet({
 
         {available.length === 0 ? (
           <p className="text-sm text-slate-500 py-4 text-center">
-            All active players are already in the game.
+            all active players are already in the game.
           </p>
         ) : (
           <div className="space-y-1">
@@ -84,7 +84,7 @@ export function AddPlayerSheet({
               disabled={selected.size === 0}
               onClick={handleAdd}
             >
-              Add {selected.size > 0 ? `${selected.size} Player${selected.size > 1 ? 's' : ''}` : 'Players'}
+              add {selected.size > 0 ? `${selected.size} player${selected.size > 1 ? 's' : ''}` : 'players'}
             </Button>
           </div>
         )}

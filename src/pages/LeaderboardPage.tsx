@@ -15,13 +15,13 @@ export function LeaderboardPage() {
 
   return (
     <>
-      <PageHeader title="Leaderboard" />
+      <PageHeader title="leaderboard" />
       <PageContent>
         {!hasData ? (
           <EmptyState
             icon="🏆"
-            title="No results yet"
-            description="Complete some games to see the leaderboard."
+            title="no results yet"
+            description="complete some games to see the leaderboard."
           />
         ) : (
           <>
@@ -35,8 +35,8 @@ export function LeaderboardPage() {
 
             {unranked.length > 0 && (
               <>
-                <h3 className="text-sm text-slate-500 uppercase tracking-wider mb-2 mt-6">
-                  Unranked (need 3+ games)
+                <h3 className="text-sm text-slate-500 tracking-wider mb-2 mt-6">
+                  unranked (need 3+ games)
                 </h3>
                 <Card>
                   {unranked.map((entry) => (
