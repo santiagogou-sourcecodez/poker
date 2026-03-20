@@ -2,9 +2,19 @@ import { db } from './database'
 import type { Player, Game, GamePlayer } from './models'
 import { settlePlayer } from '../lib/settlement'
 
+const SEED_VERSION = '5'
+
 export async function seedDatabase() {
-  const playerCount = await db.players.count()
-  if (playerCount > 0) return // Already seeded
+  const currentVersion = localStorage.getItem('seedVersion')
+  if (currentVersion === SEED_VERSION) {
+    const playerCount = await db.players.count()
+    if (playerCount > 0) return // Already seeded with correct version
+  }
+
+  // Delete and recreate DB to reset auto-increment counters
+  await db.delete()
+  await db.open()
+  localStorage.setItem('seedVersion', SEED_VERSION)
 
   // Players — real poker @ sudio crew
   const players: Omit<Player, 'id'>[] = [
