@@ -36,7 +36,7 @@ export function LeaderboardPage() {
             {unranked.length > 0 && (
               <>
                 <h3 className="text-sm text-slate-500 tracking-wider mb-2 mt-6">
-                  unranked (need 3+ games)
+                  purgatory (fewer than 3 games)
                 </h3>
                 <Card>
                   {unranked.map((entry) => (
