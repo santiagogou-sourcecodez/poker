@@ -31,10 +31,12 @@ export function useGameHistory(): GameHistoryEntry[] | undefined {
 
       results.push({
         game,
-        gamePlayers: gps.map((gp) => ({
-          ...gp,
-          player: playerMap.get(gp.playerId)!,
-        })),
+        gamePlayers: gps
+          .filter((gp) => playerMap.has(gp.playerId))
+          .map((gp) => ({
+            ...gp,
+            player: playerMap.get(gp.playerId)!,
+          })),
       })
     }
 

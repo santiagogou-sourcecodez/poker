@@ -25,10 +25,12 @@ export function useActiveGame(): ActiveGameData | null | undefined {
     const players = await db.players.where('id').anyOf(playerIds).toArray()
     const playerMap = new Map(players.map((p) => [p.id!, p]))
 
-    const gamePlayers = gps.map((gp) => ({
-      ...gp,
-      player: playerMap.get(gp.playerId)!,
-    }))
+    const gamePlayers = gps
+      .filter((gp) => playerMap.has(gp.playerId))
+      .map((gp) => ({
+        ...gp,
+        player: playerMap.get(gp.playerId)!,
+      }))
 
     return { game, gamePlayers }
   })
