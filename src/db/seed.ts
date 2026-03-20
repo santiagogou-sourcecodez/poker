@@ -2,16 +2,13 @@ import { db } from './database'
 import type { Player } from './models'
 import { settlePlayer } from '../lib/settlement'
 
-const SEED_VERSION = '7'
+const SEED_VERSION = '8'
 
 export async function seedDatabase() {
   const currentVersion = localStorage.getItem('seedVersion')
-  if (currentVersion === SEED_VERSION) {
-    const playerCount = await db.players.count()
-    if (playerCount > 0) return
-  }
+  if (currentVersion === SEED_VERSION) return
 
-  // Clear all tables (keeps DB open, no race conditions)
+  // Full clear + reseed on any version mismatch
   await db.transaction('rw', db.players, db.games, db.gamePlayers, async () => {
     await db.gamePlayers.clear()
     await db.games.clear()
