@@ -39,6 +39,16 @@ export class PokerDB extends Dexie {
       await tx.table('games').clear()
       await tx.table('gamePlayers').clear()
     })
+    // v5: add hidden flag to constructed games
+    this.version(5).stores({
+      players: '++id, name, isActive',
+      games: '++id, date, status',
+      gamePlayers: '++id, gameId, playerId, [gameId+playerId]',
+    }).upgrade(async (tx) => {
+      await tx.table('players').clear()
+      await tx.table('games').clear()
+      await tx.table('gamePlayers').clear()
+    })
   }
 }
 

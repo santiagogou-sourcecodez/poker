@@ -43,7 +43,8 @@ export async function seedDatabase() {
     date: string,
     startHour: number,
     durationHours: number,
-    results: { playerIndex: number; buyIns: number; finalChips: number }[]
+    results: { playerIndex: number; buyIns: number; finalChips: number }[],
+    hidden = false,
   ) {
     const startedAt = new Date(`${date}T${String(startHour).padStart(2, '0')}:00:00`)
     const endedAt = new Date(startedAt.getTime() + durationHours * 3600000)
@@ -53,6 +54,7 @@ export async function seedDatabase() {
       startedAt,
       endedAt,
       status: 'completed',
+      hidden,
     } as Game)
 
     for (const r of results) {
@@ -85,7 +87,7 @@ export async function seedDatabase() {
     { playerIndex: P.Paulius, buyIns: 2, finalChips: 150 },   // -34.00
     { playerIndex: P.Mike, buyIns: 3, finalChips: 250 },      // -50.00
     { playerIndex: P.Mick, buyIns: 1, finalChips: 0 },        // -20.00
-  ])
+  ], true)
   // 1000+1325+750+1000+1025+150+250+0 = 5500 ✓
 
   // Week 2: 8 players
@@ -99,7 +101,7 @@ export async function seedDatabase() {
     { playerIndex: P.JuanPedro, buyIns: 2, finalChips: 500 }, // -20.00
     { playerIndex: P.Ben, buyIns: 1, finalChips: 1435 },      // +37.40
     { playerIndex: P.Nick, buyIns: 1, finalChips: 940 },      // +17.60
-  ])
+  ], true)
   // 250+285+250+1090+250+500+1435+940 = 5000 ✓
 
   // Week 3: 7 players
@@ -112,7 +114,7 @@ export async function seedDatabase() {
     { playerIndex: P.Tom, buyIns: 1, finalChips: 475 },       // -1.00
     { playerIndex: P.Jack, buyIns: 1, finalChips: 0 },        // -20.00
     { playerIndex: P.Ross, buyIns: 2, finalChips: 240 },      // -30.40
-  ])
+  ], true)
   // 550+1130+730+875+475+0+240 = 4000 ✓
 
   // Week 4: 7 players
@@ -125,7 +127,7 @@ export async function seedDatabase() {
     { playerIndex: P.Dimitri, buyIns: 1, finalChips: 705 },   // +8.20
     { playerIndex: P.JuanPedro, buyIns: 2, finalChips: 500 }, // -20.00
     { playerIndex: P.Joseph, buyIns: 1, finalChips: 845 },    // +13.80
-  ])
+  ], true)
   // 3195+500+500+255+705+500+845 = 6500 ✓
 
   // ---------------------------------------------------------------

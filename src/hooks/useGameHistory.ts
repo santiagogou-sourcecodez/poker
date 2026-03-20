@@ -9,11 +9,13 @@ export interface GameHistoryEntry {
 
 export function useGameHistory(): GameHistoryEntry[] | undefined {
   return useLiveQuery(async () => {
-    const games = await db.games
+    const allGames = await db.games
       .where('status')
       .equals('completed')
       .reverse()
       .sortBy('date')
+
+    const games = allGames.filter((g) => !g.hidden)
 
     const results: GameHistoryEntry[] = []
 

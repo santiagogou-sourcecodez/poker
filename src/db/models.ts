@@ -17,6 +17,7 @@ export interface Game {
   endedAt?: Date
   status: GameStatus
   notes?: string
+  hidden?: boolean
 }
 
 export interface GamePlayer {
