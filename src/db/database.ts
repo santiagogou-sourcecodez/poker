@@ -29,6 +29,16 @@ export class PokerDB extends Dexie {
       await tx.table('games').clear()
       await tx.table('gamePlayers').clear()
     })
+    // v4: fix double-counted week 5 data
+    this.version(4).stores({
+      players: '++id, name, isActive',
+      games: '++id, date, status',
+      gamePlayers: '++id, gameId, playerId, [gameId+playerId]',
+    }).upgrade(async (tx) => {
+      await tx.table('players').clear()
+      await tx.table('games').clear()
+      await tx.table('gamePlayers').clear()
+    })
   }
 }
 
