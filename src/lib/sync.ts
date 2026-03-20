@@ -228,7 +228,7 @@ export async function changePin(currentPin: string, newPin: string): Promise<boo
 
 // --- Data version: bump this when seed data changes ---
 
-const DATA_VERSION = 5
+const DATA_VERSION = 6
 
 async function clearFirestoreCollection(collName: string) {
   if (!firestore) return

@@ -8,7 +8,8 @@ export class PokerDB extends Dexie {
 
   constructor() {
     super('PokerNight')
-    this.version(1).stores({
+    // Keep version high enough so browsers with old versions can upgrade
+    this.version(5).stores({
       players: '++id, name, isActive',
       games: '++id, date, status',
       gamePlayers: '++id, gameId, playerId, [gameId+playerId]',
