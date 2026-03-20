@@ -6,6 +6,7 @@ import { ChipEntryRow } from '../components/settlement/ChipEntryRow'
 import { BalanceIndicator } from '../components/settlement/BalanceIndicator'
 import { TransferList } from '../components/settlement/TransferList'
 import { useActiveGame } from '../hooks/useActiveGame'
+import { useSyncContext } from '../contexts/SyncContext'
 import { db } from '../db/database'
 import {
   isBalanced,
@@ -19,6 +20,7 @@ import {
 export function SettlementPage() {
   const [, setLocation] = useLocation()
   const activeGame = useActiveGame()
+  const { isScorekeeper } = useSyncContext()
 
   if (activeGame === undefined) return null
   if (activeGame === null) {
@@ -88,7 +90,7 @@ export function SettlementPage() {
             <ChipEntryRow
               key={gp.id}
               gamePlayer={gp}
-              onChipsChange={handleChipsChange}
+              onChipsChange={isScorekeeper ? handleChipsChange : undefined}
             />
           ))}
         </Card>
@@ -105,11 +107,13 @@ export function SettlementPage() {
           return <TransferList transfers={transfers} playerMap={playerMap} />
         })()}
 
-        <div className="mt-6">
-          <Button fullWidth size="lg" disabled={!balanced} onClick={handleSave}>
-            {balanced ? 'save results' : 'balance chips to save'}
-          </Button>
-        </div>
+        {isScorekeeper && (
+          <div className="mt-6">
+            <Button fullWidth size="lg" disabled={!balanced} onClick={handleSave}>
+              {balanced ? 'save results' : 'balance chips to save'}
+            </Button>
+          </div>
+        )}
       </PageContent>
     </>
   )

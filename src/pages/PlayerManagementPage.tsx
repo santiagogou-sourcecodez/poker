@@ -6,10 +6,12 @@ import { PlayerAvatar } from '../components/ui/PlayerAvatar'
 import { EmptyState } from '../components/ui/EmptyState'
 import { ConfirmDialog } from '../components/ui/ConfirmDialog'
 import { usePlayers } from '../hooks/usePlayers'
+import { useSyncContext } from '../contexts/SyncContext'
 import { db } from '../db/database'
 
 export function PlayerManagementPage() {
   const { players } = usePlayers()
+  const { isScorekeeper } = useSyncContext()
   const [name, setName] = useState('')
   const [emoji, setEmoji] = useState('')
   const [paymentMethod, setPaymentMethod] = useState('')
@@ -130,87 +132,89 @@ export function PlayerManagementPage() {
     <>
       <PageHeader title="players" />
       <PageContent>
-        <form onSubmit={handleSubmit} className="mb-6 space-y-2">
-          <div className="flex gap-2">
-            <div className="relative" ref={emojiPickerRef}>
-              <button
-                type="button"
-                onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-                className="w-12 h-11 bg-slate-800 border border-slate-700 rounded-xl text-center text-lg focus:outline-none focus:border-emerald-500 hover:border-slate-600"
+        {isScorekeeper && (
+          <form onSubmit={handleSubmit} className="mb-6 space-y-2">
+            <div className="flex gap-2">
+              <div className="relative" ref={emojiPickerRef}>
+                <button
+                  type="button"
+                  onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+                  className="w-12 h-11 bg-slate-800 border border-slate-700 rounded-xl text-center text-lg focus:outline-none focus:border-emerald-500 hover:border-slate-600"
+                >
+                  {emoji || '😎'}
+                </button>
+                {showEmojiPicker && (
+                  <div className="absolute top-12 left-0 z-50 bg-slate-900 border border-slate-700 rounded-xl p-2 grid grid-cols-8 gap-1 w-72 max-h-64 overflow-y-auto shadow-lg">
+                    {EMOJI_OPTIONS.map((e) => (
+                      <button
+                        key={e}
+                        type="button"
+                        onClick={() => {
+                          setEmoji(e)
+                          setShowEmojiPicker(false)
+                        }}
+                        className={`w-8 h-8 text-lg rounded-lg flex items-center justify-center hover:bg-slate-700 ${emoji === e ? 'bg-slate-700 ring-1 ring-emerald-500' : ''}`}
+                      >
+                        {e}
+                      </button>
+                    ))}
+                    {emoji && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setEmoji('')
+                          setShowEmojiPicker(false)
+                        }}
+                        className="col-span-8 mt-1 text-xs text-slate-500 hover:text-slate-300 py-1"
+                      >
+                        clear
+                      </button>
+                    )}
+                  </div>
+                )}
+              </div>
+              <input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="player name"
+                className="flex-1 bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-slate-200 focus:outline-none focus:border-emerald-500"
+              />
+            </div>
+            <div className="flex gap-2">
+              <select
+                value={paymentMethod}
+                onChange={(e) => setPaymentMethod(e.target.value)}
+                className="bg-slate-800 border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-slate-200 focus:outline-none focus:border-emerald-500"
               >
-                {emoji || '😎'}
-              </button>
-              {showEmojiPicker && (
-                <div className="absolute top-12 left-0 z-50 bg-slate-900 border border-slate-700 rounded-xl p-2 grid grid-cols-8 gap-1 w-72 max-h-64 overflow-y-auto shadow-lg">
-                  {EMOJI_OPTIONS.map((e) => (
-                    <button
-                      key={e}
-                      type="button"
-                      onClick={() => {
-                        setEmoji(e)
-                        setShowEmojiPicker(false)
-                      }}
-                      className={`w-8 h-8 text-lg rounded-lg flex items-center justify-center hover:bg-slate-700 ${emoji === e ? 'bg-slate-700 ring-1 ring-emerald-500' : ''}`}
-                    >
-                      {e}
-                    </button>
-                  ))}
-                  {emoji && (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setEmoji('')
-                        setShowEmojiPicker(false)
-                      }}
-                      className="col-span-8 mt-1 text-xs text-slate-500 hover:text-slate-300 py-1"
-                    >
-                      clear
-                    </button>
-                  )}
-                </div>
+                <option value="">payment method</option>
+                <option value="bizum">bizum</option>
+                <option value="revolut">revolut</option>
+                <option value="paypal">paypal</option>
+                <option value="bank transfer">bank transfer</option>
+                <option value="cash">cash</option>
+                <option value="other">other</option>
+              </select>
+              <input
+                type="text"
+                value={paymentDetails}
+                onChange={(e) => setPaymentDetails(e.target.value)}
+                placeholder="phone, @username, etc."
+                className="flex-1 bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-200 focus:outline-none focus:border-emerald-500"
+              />
+            </div>
+            <div className="flex gap-2">
+              <Button type="submit" fullWidth disabled={!name.trim()}>
+                {editingId ? 'save' : 'add player'}
+              </Button>
+              {editingId && (
+                <Button type="button" variant="ghost" onClick={cancelEdit}>
+                  cancel
+                </Button>
               )}
             </div>
-            <input
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="player name"
-              className="flex-1 bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-slate-200 focus:outline-none focus:border-emerald-500"
-            />
-          </div>
-          <div className="flex gap-2">
-            <select
-              value={paymentMethod}
-              onChange={(e) => setPaymentMethod(e.target.value)}
-              className="bg-slate-800 border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-slate-200 focus:outline-none focus:border-emerald-500"
-            >
-              <option value="">payment method</option>
-              <option value="bizum">bizum</option>
-              <option value="revolut">revolut</option>
-              <option value="paypal">paypal</option>
-              <option value="bank transfer">bank transfer</option>
-              <option value="cash">cash</option>
-              <option value="other">other</option>
-            </select>
-            <input
-              type="text"
-              value={paymentDetails}
-              onChange={(e) => setPaymentDetails(e.target.value)}
-              placeholder="phone, @username, etc."
-              className="flex-1 bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-200 focus:outline-none focus:border-emerald-500"
-            />
-          </div>
-          <div className="flex gap-2">
-            <Button type="submit" fullWidth disabled={!name.trim()}>
-              {editingId ? 'save' : 'add player'}
-            </Button>
-            {editingId && (
-              <Button type="button" variant="ghost" onClick={cancelEdit}>
-                cancel
-              </Button>
-            )}
-          </div>
-        </form>
+          </form>
+        )}
 
         {players.length === 0 ? (
           <EmptyState
@@ -236,12 +240,16 @@ export function PlayerManagementPage() {
                         </div>
                       )}
                     </div>
-                    <Button variant="ghost" size="sm" onClick={() => startEdit(player.id!)}>
-                      edit
-                    </Button>
-                    <Button variant="ghost" size="sm" onClick={() => setDeactivateId(player.id!)}>
-                      deactivate
-                    </Button>
+                    {isScorekeeper && (
+                      <>
+                        <Button variant="ghost" size="sm" onClick={() => startEdit(player.id!)}>
+                          edit
+                        </Button>
+                        <Button variant="ghost" size="sm" onClick={() => setDeactivateId(player.id!)}>
+                          deactivate
+                        </Button>
+                      </>
+                    )}
                   </div>
                 ))}
               </Card>
@@ -260,15 +268,17 @@ export function PlayerManagementPage() {
                     >
                       <PlayerAvatar name={player.name} emoji={player.emoji} />
                       <span className="flex-1 font-medium text-slate-400">{player.name}</span>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => {
-                          db.players.update(player.id!, { isActive: true })
-                        }}
-                      >
-                        reactivate
-                      </Button>
+                      {isScorekeeper && (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => {
+                            db.players.update(player.id!, { isActive: true })
+                          }}
+                        >
+                          reactivate
+                        </Button>
+                      )}
                     </div>
                   ))}
                 </Card>

@@ -5,7 +5,7 @@ import type { GamePlayer, Player } from '../../db/models'
 
 interface PlayerRowProps {
   gamePlayer: GamePlayer & { player: Player }
-  onRebuy: (gpId: number) => void
+  onRebuy?: (gpId: number) => void
   onRemove?: (gpId: number) => void
 }
 
@@ -23,16 +23,20 @@ export function PlayerRow({ gamePlayer, onRebuy, onRemove }: PlayerRowProps) {
           {gamePlayer.buyIns} buy-in{gamePlayer.buyIns !== 1 ? 's' : ''} &middot; €{totalInvested}
         </div>
       </div>
-      <div className="flex items-center gap-2">
-        {onRemove && gamePlayer.buyIns === 1 && (
-          <Button variant="ghost" size="sm" onClick={() => onRemove(gamePlayer.id!)}>
-            ✕
-          </Button>
-        )}
-        <Button variant="secondary" size="sm" onClick={() => onRebuy(gamePlayer.id!)}>
-          rebuy
-        </Button>
-      </div>
+      {(onRebuy || onRemove) && (
+        <div className="flex items-center gap-2">
+          {onRemove && gamePlayer.buyIns === 1 && (
+            <Button variant="ghost" size="sm" onClick={() => onRemove(gamePlayer.id!)}>
+              ✕
+            </Button>
+          )}
+          {onRebuy && (
+            <Button variant="secondary" size="sm" onClick={() => onRebuy(gamePlayer.id!)}>
+              rebuy
+            </Button>
+          )}
+        </div>
+      )}
     </div>
   )
 }

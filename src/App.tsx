@@ -1,6 +1,7 @@
-import { Route, Switch } from 'wouter'
+import { Route, Switch, Router } from 'wouter'
 import { Shell } from './components/layout/Shell'
 import { BottomNav } from './components/layout/BottomNav'
+import { SyncProvider } from './contexts/SyncContext'
 import { DashboardPage } from './pages/DashboardPage'
 import { ActiveGamePage } from './pages/ActiveGamePage'
 import { SettlementPage } from './pages/SettlementPage'
@@ -11,17 +12,21 @@ import { PlayerManagementPage } from './pages/PlayerManagementPage'
 
 export default function App() {
   return (
-    <Shell>
-      <Switch>
-        <Route path="/" component={DashboardPage} />
-        <Route path="/game" component={ActiveGamePage} />
-        <Route path="/game/settle" component={SettlementPage} />
-        <Route path="/leaderboard" component={LeaderboardPage} />
-        <Route path="/history" component={HistoryPage} />
-        <Route path="/history/:id" component={GameDetailPage} />
-        <Route path="/players" component={PlayerManagementPage} />
-      </Switch>
-      <BottomNav />
-    </Shell>
+    <SyncProvider>
+      <Router base="/poker">
+        <Shell>
+          <Switch>
+            <Route path="/" component={DashboardPage} />
+            <Route path="/game" component={ActiveGamePage} />
+            <Route path="/game/settle" component={SettlementPage} />
+            <Route path="/leaderboard" component={LeaderboardPage} />
+            <Route path="/history" component={HistoryPage} />
+            <Route path="/history/:id" component={GameDetailPage} />
+            <Route path="/players" component={PlayerManagementPage} />
+          </Switch>
+          <BottomNav />
+        </Shell>
+      </Router>
+    </SyncProvider>
   )
 }

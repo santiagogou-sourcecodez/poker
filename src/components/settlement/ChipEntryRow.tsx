@@ -5,7 +5,7 @@ import type { GamePlayer, Player } from '../../db/models'
 
 interface ChipEntryRowProps {
   gamePlayer: GamePlayer & { player: Player }
-  onChipsChange: (gpId: number, chips: number | undefined) => void
+  onChipsChange?: (gpId: number, chips: number | undefined) => void
 }
 
 export function ChipEntryRow({ gamePlayer, onChipsChange }: ChipEntryRowProps) {
@@ -26,10 +26,16 @@ export function ChipEntryRow({ gamePlayer, onChipsChange }: ChipEntryRowProps) {
             {gamePlayer.buyIns} buy-in{gamePlayer.buyIns !== 1 ? 's' : ''} &middot; €{cashIn} in
           </div>
         </div>
-        <ChipInput
-          value={gamePlayer.finalChips}
-          onChange={(v) => onChipsChange(gamePlayer.id!, v)}
-        />
+        {onChipsChange ? (
+          <ChipInput
+            value={gamePlayer.finalChips}
+            onChange={(v) => onChipsChange(gamePlayer.id!, v)}
+          />
+        ) : (
+          <span className="text-lg font-mono text-slate-300 w-24 text-right">
+            {gamePlayer.finalChips ?? '—'}
+          </span>
+        )}
       </div>
       {net !== null && (
         <div className="flex justify-end mt-1 gap-3 text-xs">

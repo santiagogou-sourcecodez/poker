@@ -11,12 +11,14 @@ import { GameSummaryBar } from '../components/game/GameSummaryBar'
 import { GameTimer } from '../components/game/GameTimer'
 import { useActiveGame } from '../hooks/useActiveGame'
 import { usePlayers } from '../hooks/usePlayers'
+import { useSyncContext } from '../contexts/SyncContext'
 import { db } from '../db/database'
 
 export function ActiveGamePage() {
   const [, setLocation] = useLocation()
   const activeGame = useActiveGame()
   const { players } = usePlayers()
+  const { isScorekeeper } = useSyncContext()
   const [showAddPlayers, setShowAddPlayers] = useState(false)
   const [showEndConfirm, setShowEndConfirm] = useState(false)
   const [undoId, setUndoId] = useState<number | null>(null)
@@ -102,11 +104,13 @@ export function ActiveGamePage() {
           <EmptyState
             icon="🃏"
             title="no game running"
-            description="start a new game night and add your players."
+            description={isScorekeeper ? 'start a new game night and add your players.' : 'waiting for the scorekeeper to start a game.'}
             action={
-              <Button size="lg" onClick={startGame}>
-                start game night
-              </Button>
+              isScorekeeper ? (
+                <Button size="lg" onClick={startGame}>
+                  start game night
+                </Button>
+              ) : undefined
             }
           />
         </PageContent>
@@ -136,11 +140,13 @@ export function ActiveGamePage() {
             <EmptyState
               icon="👥"
               title="no players yet"
-              description="add players to start tracking buy-ins."
+              description={isScorekeeper ? 'add players to start tracking buy-ins.' : 'waiting for players to be added.'}
               action={
-                <Button onClick={() => setShowAddPlayers(true)}>
-                  add players
-                </Button>
+                isScorekeeper ? (
+                  <Button onClick={() => setShowAddPlayers(true)}>
+                    add players
+                  </Button>
+                ) : undefined
               }
             />
           ) : (
@@ -149,32 +155,34 @@ export function ActiveGamePage() {
                 <PlayerRow
                   key={gp.id}
                   gamePlayer={gp}
-                  onRebuy={handleRebuy}
-                  onRemove={removePlayer}
+                  onRebuy={isScorekeeper ? handleRebuy : undefined}
+                  onRemove={isScorekeeper ? removePlayer : undefined}
                 />
               ))}
             </Card>
           )}
         </div>
 
-        <div className="flex gap-3 mt-4">
-          <Button
-            variant="secondary"
-            fullWidth
-            onClick={() => setShowAddPlayers(true)}
-          >
-            add players
-          </Button>
-          {activeGame.gamePlayers.length >= 2 && (
+        {isScorekeeper && (
+          <div className="flex gap-3 mt-4">
             <Button
-              variant="primary"
+              variant="secondary"
               fullWidth
-              onClick={() => setShowEndConfirm(true)}
+              onClick={() => setShowAddPlayers(true)}
             >
-              end game & settle
+              add players
             </Button>
-          )}
-        </div>
+            {activeGame.gamePlayers.length >= 2 && (
+              <Button
+                variant="primary"
+                fullWidth
+                onClick={() => setShowEndConfirm(true)}
+              >
+                end game & settle
+              </Button>
+            )}
+          </div>
+        )}
 
         {/* Undo toast */}
         {undoId && (
