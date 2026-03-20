@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { PageHeader, PageContent } from '../components/layout/Shell'
 import { Card } from '../components/ui/Card'
 import { Button } from '../components/ui/Button'
@@ -14,8 +14,26 @@ export function PlayerManagementPage() {
   const [emoji, setEmoji] = useState('')
   const [paymentMethod, setPaymentMethod] = useState('')
   const [paymentDetails, setPaymentDetails] = useState('')
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false)
   const [editingId, setEditingId] = useState<number | null>(null)
   const [deactivateId, setDeactivateId] = useState<number | null>(null)
+  const emojiPickerRef = useRef<HTMLDivElement>(null)
+
+  const EMOJI_OPTIONS = [
+    '🎯', '🔥', '🍀', '💎', '🐺', '🌙', '🃏', '👑',
+    '🦊', '🐻', '🦁', '🐯', '🦅', '🐉', '🎲', '🎰',
+    '⚡', '💰', '🏆', '🌟', '🍺', '🎭', '🧊', '🔮',
+  ]
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (emojiPickerRef.current && !emojiPickerRef.current.contains(e.target as Node)) {
+        setShowEmojiPicker(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -83,13 +101,44 @@ export function PlayerManagementPage() {
       <PageContent>
         <form onSubmit={handleSubmit} className="mb-6 space-y-2">
           <div className="flex gap-2">
-            <input
-              type="text"
-              value={emoji}
-              onChange={(e) => setEmoji(e.target.value)}
-              placeholder="😎"
-              className="w-12 bg-slate-800 border border-slate-700 rounded-xl px-2 py-2.5 text-center text-lg focus:outline-none focus:border-emerald-500"
-            />
+            <div className="relative" ref={emojiPickerRef}>
+              <button
+                type="button"
+                onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+                className="w-12 h-11 bg-slate-800 border border-slate-700 rounded-xl text-center text-lg focus:outline-none focus:border-emerald-500 hover:border-slate-600"
+              >
+                {emoji || '😎'}
+              </button>
+              {showEmojiPicker && (
+                <div className="absolute top-12 left-0 z-50 bg-slate-900 border border-slate-700 rounded-xl p-2 grid grid-cols-6 gap-1 w-56 shadow-lg">
+                  {EMOJI_OPTIONS.map((e) => (
+                    <button
+                      key={e}
+                      type="button"
+                      onClick={() => {
+                        setEmoji(e)
+                        setShowEmojiPicker(false)
+                      }}
+                      className={`w-8 h-8 text-lg rounded-lg flex items-center justify-center hover:bg-slate-700 ${emoji === e ? 'bg-slate-700 ring-1 ring-emerald-500' : ''}`}
+                    >
+                      {e}
+                    </button>
+                  ))}
+                  {emoji && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setEmoji('')
+                        setShowEmojiPicker(false)
+                      }}
+                      className="col-span-6 mt-1 text-xs text-slate-500 hover:text-slate-300 py-1"
+                    >
+                      clear
+                    </button>
+                  )}
+                </div>
+              )}
+            </div>
             <input
               type="text"
               value={name}
