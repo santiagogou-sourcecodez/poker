@@ -232,6 +232,24 @@ export function DashboardPage() {
             </p>
           </div>
         )}
+
+        {/* Info */}
+        <div className="mt-6">
+          <h2 className="text-sm text-slate-500 tracking-wider mb-2">info</h2>
+          <Card>
+            <div className="text-sm text-slate-400 space-y-3 py-1">
+              <p className="text-slate-300">carrer pere IV 29-35, 4-1</p>
+              <div>
+                <p>cash game starts at 7pm, last hand 10:30pm.</p>
+                <p>buy in €20 for 500 chips.</p>
+                <p>blinds 5/10 all night.</p>
+                <p>unlimited rebuys.</p>
+                <p>texas hold'em.</p>
+              </div>
+              <p>feel free to bring people along if we're short on numbers. they'll get added to the group after if they want to come again.</p>
+            </div>
+          </Card>
+        </div>
       </PageContent>
 
       {/* PIN modal */}
