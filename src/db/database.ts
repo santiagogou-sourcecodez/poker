@@ -19,6 +19,16 @@ export class PokerDB extends Dexie {
       games: '++id, date, status',
       gamePlayers: '++id, gameId, playerId, [gameId+playerId]',
     })
+    // v3: clear old demo data so real league data can be seeded
+    this.version(3).stores({
+      players: '++id, name, isActive',
+      games: '++id, date, status',
+      gamePlayers: '++id, gameId, playerId, [gameId+playerId]',
+    }).upgrade(async (tx) => {
+      await tx.table('players').clear()
+      await tx.table('games').clear()
+      await tx.table('gamePlayers').clear()
+    })
   }
 }
 
