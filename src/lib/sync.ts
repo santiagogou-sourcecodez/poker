@@ -5,6 +5,7 @@ import {
   deleteDoc,
   onSnapshot,
   getDoc,
+  getDocs,
   type Unsubscribe,
 } from 'firebase/firestore'
 import { firestore, isFirebaseEnabled } from './firebase'
@@ -225,7 +226,40 @@ export async function changePin(currentPin: string, newPin: string): Promise<boo
   return true
 }
 
-// --- Push all local data to Firestore (initial scorekeeper sync) ---
+// --- Data version: bump this when seed data changes ---
+
+const DATA_VERSION = 2
+
+async function clearFirestoreCollection(collName: string) {
+  if (!firestore) return
+  const snap = await getDocs(collection(firestore, collName))
+  for (const d of snap.docs) {
+    await deleteDoc(d.ref)
+  }
+}
+
+export async function syncDataVersion(): Promise<void> {
+  if (!firestore) return
+
+  const configSnap = await getDoc(doc(firestore, 'config', 'app'))
+  const currentVersion = configSnap.exists() ? configSnap.data().dataVersion ?? 0 : 0
+
+  if (currentVersion < DATA_VERSION) {
+    // Clear stale Firestore data
+    await clearFirestoreCollection('players')
+    await clearFirestoreCollection('games')
+    await clearFirestoreCollection('gamePlayers')
+
+    // Push fresh local data
+    await pushAllToFirestore()
+
+    // Update version (preserve existing config like PIN)
+    const existing = configSnap.exists() ? configSnap.data() : {}
+    await setDoc(doc(firestore, 'config', 'app'), { ...existing, dataVersion: DATA_VERSION })
+  }
+}
+
+// --- Push all local data to Firestore ---
 
 export async function pushAllToFirestore(): Promise<void> {
   if (!firestore) return

@@ -7,6 +7,7 @@ import {
   verifyPin,
   changePin as changePinSync,
   pushAllToFirestore,
+  syncDataVersion,
 } from '../lib/sync'
 
 interface SyncContextValue {
@@ -44,6 +45,9 @@ export function SyncProvider({ children }: { children: ReactNode }) {
     if (isScorekeep) {
       setScorekeeper(true)
     }
+
+    // Check if Firestore data needs to be refreshed (seed version changed)
+    syncDataVersion().catch(console.error)
 
     // Start listening to Firestore
     const unsub = startFirestoreSync()
