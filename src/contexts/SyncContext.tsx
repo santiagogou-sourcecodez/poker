@@ -46,12 +46,22 @@ export function SyncProvider({ children }: { children: ReactNode }) {
       setScorekeeper(true)
     }
 
-    // Check if Firestore data needs to be refreshed (seed version changed)
-    syncDataVersion().catch(console.error)
+    // Sync data version FIRST, then start listener
+    let unsub: (() => void) | undefined
+    let cancelled = false
 
-    // Start listening to Firestore
-    const unsub = startFirestoreSync()
-    return unsub
+    syncDataVersion()
+      .catch(console.error)
+      .finally(() => {
+        if (!cancelled) {
+          unsub = startFirestoreSync()
+        }
+      })
+
+    return () => {
+      cancelled = true
+      unsub?.()
+    }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   // Keep scorekeeper state in sync

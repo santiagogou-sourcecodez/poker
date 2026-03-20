@@ -261,6 +261,12 @@ export async function syncDataVersion(): Promise<void> {
 
 // --- Push all local data to Firestore ---
 
+async function pushDocAwait(tableName: string, id: number, data: Record<string, unknown>) {
+  if (!firestore) return
+  const serialized = serializeForFirestore(data)
+  await setDoc(doc(firestore, tableName, String(id)), serialized)
+}
+
 export async function pushAllToFirestore(): Promise<void> {
   if (!firestore) return
 
@@ -269,13 +275,13 @@ export async function pushAllToFirestore(): Promise<void> {
   const gamePlayers = await db.gamePlayers.toArray()
 
   for (const p of players) {
-    pushDoc('players', p.id!, p as unknown as Record<string, unknown>)
+    await pushDocAwait('players', p.id!, p as unknown as Record<string, unknown>)
   }
   for (const g of games) {
-    pushDoc('games', g.id!, g as unknown as Record<string, unknown>)
+    await pushDocAwait('games', g.id!, g as unknown as Record<string, unknown>)
   }
   for (const gp of gamePlayers) {
-    pushDoc('gamePlayers', gp.id!, gp as unknown as Record<string, unknown>)
+    await pushDocAwait('gamePlayers', gp.id!, gp as unknown as Record<string, unknown>)
   }
 }
 
