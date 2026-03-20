@@ -2,15 +2,15 @@ import { initializeApp, type FirebaseApp } from 'firebase/app'
 import { getFirestore, type Firestore } from 'firebase/firestore'
 
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  apiKey: 'AIzaSyCGxIupxt8cXs9R7GB-KFPW8Ik9ys4FvbY',
+  authDomain: 'poker-sudio.firebaseapp.com',
+  projectId: 'poker-sudio',
+  storageBucket: 'poker-sudio.firebasestorage.app',
+  messagingSenderId: '687209387723',
+  appId: '1:687209387723:web:a55569d607a46f6a7d2d4e',
 }
 
-const hasConfig = !!firebaseConfig.apiKey && !!firebaseConfig.projectId
+const hasConfig = true
 
 let app: FirebaseApp | null = null
 let firestore: Firestore | null = null
