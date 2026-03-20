@@ -19,7 +19,7 @@ export function DashboardPage() {
   return (
     <>
       <PageHeader
-        title="poker night"
+        title="poker @ sudio"
         right={
           <button
             onClick={() => setLocation('/players')}
