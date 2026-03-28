@@ -179,7 +179,18 @@ export function startFirestoreSync(): Unsubscribe {
         for (const change of snapshot.docChanges()) {
           const data = deserializeFromFirestore<GamePlayer>(change.doc.data())
           if (change.type === 'added' || change.type === 'modified') {
-            await db.gamePlayers.put(data)
+            // Don't let stale sync data overwrite settlement results
+            const existing = data.id ? await db.gamePlayers.get(data.id) : undefined
+            if (existing?.net !== undefined && data.net === undefined) {
+              await db.gamePlayers.update(data.id!, {
+                ...data,
+                cashIn: existing.cashIn,
+                cashOut: existing.cashOut,
+                net: existing.net,
+              })
+            } else {
+              await db.gamePlayers.put(data)
+            }
           } else if (change.type === 'removed') {
             await db.gamePlayers.delete(data.id!)
           }

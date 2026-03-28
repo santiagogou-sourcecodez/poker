@@ -1,9 +1,13 @@
+import { useState } from 'react'
 import { useParams, useLocation } from 'wouter'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { PageHeader, PageContent } from '../components/layout/Shell'
 import { Card } from '../components/ui/Card'
+import { Button } from '../components/ui/Button'
+import { ConfirmDialog } from '../components/ui/ConfirmDialog'
 import { ResultCard } from '../components/settlement/ResultCard'
 import { TransferList } from '../components/settlement/TransferList'
+import { useSyncContext } from '../contexts/SyncContext'
 import { db } from '../db/database'
 import { formatDateLong, formatDuration } from '../lib/format'
 import { calculateTotalPot, calculateMinTransfers } from '../lib/settlement'
@@ -11,6 +15,8 @@ import { calculateTotalPot, calculateMinTransfers } from '../lib/settlement'
 export function GameDetailPage() {
   const params = useParams<{ id: string }>()
   const [, setLocation] = useLocation()
+  const { isScorekeeper } = useSyncContext()
+  const [showResettleConfirm, setShowResettleConfirm] = useState(false)
   const gameId = Number(params.id)
 
   const data = useLiveQuery(async () => {
@@ -88,7 +94,41 @@ export function GameDetailPage() {
             <div className="text-sm text-slate-300">{game.notes}</div>
           </div>
         )}
+
+        {isScorekeeper && (
+          <div className="mt-6">
+            <Button
+              variant="secondary"
+              fullWidth
+              onClick={() => setShowResettleConfirm(true)}
+            >
+              re-settle game
+            </Button>
+          </div>
+        )}
       </PageContent>
+
+      <ConfirmDialog
+        open={showResettleConfirm}
+        title="re-settle game?"
+        message="this will reopen settlement so you can edit chip counts and recalculate results."
+        confirmLabel="re-settle"
+        variant="primary"
+        onConfirm={async () => {
+          // Check no other game is active/settling
+          const existing = await db.games
+            .where('status')
+            .anyOf('active', 'settling')
+            .first()
+          if (existing) {
+            setShowResettleConfirm(false)
+            return
+          }
+          await db.games.update(gameId, { status: 'settling', endedAt: undefined })
+          setLocation('/game/settle')
+        }}
+        onCancel={() => setShowResettleConfirm(false)}
+      />
     </>
   )
 }

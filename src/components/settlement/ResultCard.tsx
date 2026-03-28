@@ -18,7 +18,7 @@ export function ResultCard({ gamePlayer, rank }: ResultCardProps) {
           {gamePlayer.player.name}
         </div>
         <div className="text-xs text-slate-500">
-          €{gamePlayer.cashIn?.toFixed(2)} in &middot; €{gamePlayer.cashOut?.toFixed(2)} out
+          €{(gamePlayer.cashIn ?? 0).toFixed(2)} in &middot; €{(gamePlayer.cashOut ?? 0).toFixed(2)} out
         </div>
       </div>
       <div

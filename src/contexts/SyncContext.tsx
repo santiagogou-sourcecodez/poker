@@ -75,8 +75,8 @@ export function SyncProvider({ children }: { children: ReactNode }) {
       setIsScorekeep(true)
       sessionStorage.setItem('scorekeeper', 'true')
       setScorekeeper(true)
-      // Push local data to Firestore on first scorekeeper session
-      await pushAllToFirestore()
+      // Push local data to Firestore in background — don't block the UI
+      pushAllToFirestore().catch(console.error)
       return true
     }
     return false

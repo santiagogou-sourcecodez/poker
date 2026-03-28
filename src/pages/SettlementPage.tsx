@@ -40,20 +40,22 @@ export function SettlementPage() {
   const handleSave = async () => {
     if (!balanced || !activeGame.game.id) return
 
-    // Calculate and store results for each player
-    for (const gp of activeGame.gamePlayers) {
-      const result = settlePlayer(gp)
-      await db.gamePlayers.update(gp.id!, {
-        cashIn: result.cashIn,
-        cashOut: result.cashOut,
-        net: result.net,
-      })
-    }
+    // Settle all players and mark game complete in a single transaction
+    // to prevent Firestore onSnapshot from overwriting partial results
+    await db.transaction('rw', db.gamePlayers, db.games, async () => {
+      for (const gp of activeGame.gamePlayers) {
+        const result = settlePlayer(gp)
+        await db.gamePlayers.update(gp.id!, {
+          cashIn: result.cashIn,
+          cashOut: result.cashOut,
+          net: result.net,
+        })
+      }
 
-    // Mark game as completed
-    await db.games.update(activeGame.game.id, {
-      status: 'completed',
-      endedAt: new Date(),
+      await db.games.update(activeGame.game.id!, {
+        status: 'completed',
+        endedAt: new Date(),
+      })
     })
 
     setLocation(`/history/${activeGame.game.id}`)
